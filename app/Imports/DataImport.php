@@ -15,17 +15,19 @@ class DataImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
+        $row = array_change_key_case($row, CASE_UPPER);
+        // dd($row);
         return new Pemilih([
-            'korkab' => $row['NAMA KORKAB'],
-            'no_hp_korkab' => $row['NO HP KORKAB'],
+            'korkab' => $row['NAMA_KORKAB'],
+            'no_hp_korkab' => $row['NO_HP_KORKAB'],
             'kecamatan' => $row['KECAMATAN'],
-            'korcam' => $row['NAMA KORCAM'],
-            'no_hp_korcam' => $row['NO HP KORCAM'],
-            'pendamping' => $row['NAMA PENDAMPING'],
-            'no_hp_pendamping' => $row['NO HP PENDAMPING'],
+            'korcam' => $row['NAMA_KORCAM'],
+            'no_hp_korcam' => $row['NO_HP_KORCAM'],
+            'pendamping' => $row['NAMA_PENDAMPING'],
+            'no_hp_pendamping' => $row['NO_HP_PENDAMPING'],
             'desa' => $row['DESA'],
-            'kpm' => $row['NAMA KKPM'],
-            'no_hp_kpm' => $row['NO HP KKPM'],
+            'kpm' => $row['NAMA_KPM'],
+            'no_hp_kpm' => $row['NO_HP_KKPM'],
             'rt' => $row['RT'],
             'rw' => $row['RW'],
             'tps' => $row['TPS'],
