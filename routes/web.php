@@ -21,13 +21,14 @@ Auth::routes();
 Route::middleware('Role:admin')->group(
     function () {
 
-        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-        Route::get('/Dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
-        Route::prefix('pemilih')->group(
-            function () {
-                Route::get('/', [App\Http\Controllers\DatapemilihController::class, 'index'])->name('pemilih');
-                Route::post('/import', [App\Http\Controllers\DatapemilihController::class, 'import'])->name('import');
-            }
-        );
+    }
+);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/Dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
+Route::prefix('pemilih')->group(
+    function () {
+        Route::get('/', [App\Http\Controllers\DatapemilihController::class, 'index'])->name('pemilih');
+        Route::post('/import', [App\Http\Controllers\DatapemilihController::class, 'import'])->name('import');
     }
 );
