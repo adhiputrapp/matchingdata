@@ -71,6 +71,68 @@ class DatapemilihController extends Controller
         return view('pemilih.index', $data);
     }
 
+
+    public function filter()
+    {
+        // dd($pivotData);
+        $data['pemilih'] = Pemilih::groupBy('korkab')->get();
+
+        return view('pemilih.filter', $data);
+    }
+    public function korkab($korkab)
+    {
+        // dd($pivotData);
+        $data['korkab'] = $korkab;
+        $data['pemilih'] =
+            Pemilih::select('korkab')
+            ->selectRaw("
+        JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'Kecamatan', kecamatan,
+                'korcam', korcam,
+                'pendamping', pendamping,
+                'desa_kpm', desa_kpm
+            )
+        ) AS result
+    ")
+            ->fromSub(function ($query) {
+                $query->select('korkab', 'kecamatan', 'korcam', 'pendamping')
+                    ->selectRaw("
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'kpm', kpm_array,
+                        'desa', desa
+                    )
+                ) AS desa_kpm
+            ")
+                    ->fromSub(function ($subquery) {
+                        $subquery->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+                            ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+                            ->from('pemilih')
+                            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa');
+                    }, 'desa_kpm_subquery')
+                    ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping');
+            }, 'korcam_subquery')
+            ->where('korkab', $korkab)
+            ->groupBy('korkab')
+            ->orderBy('korkab')
+            ->get();
+        // dd($data['pemilih']);
+        return view('pemilih.korkab', $data);
+    }
+    public function kecamatan($kecamatan)
+    {
+        // dd($pivotData);
+        $data['kecamatan'] = $kecamatan;
+        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+            ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+            ->where('kecamatan', $kecamatan)
+            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+            ->get();
+        // dd($data['pemilih']);
+        return view('pemilih.kecamatan', $data);
+    }
+
     public function ajax_finder(Request $request)
     {
         $file = $request->file('file');
@@ -81,6 +143,7 @@ class DatapemilihController extends Controller
     }
     public function import(Request $request)
     {
+        ini_set('max_execution_time', 300);
         $file = $request->file('file');
 
         Excel::import(new DataImport, $file);

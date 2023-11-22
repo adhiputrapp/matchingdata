@@ -84,6 +84,11 @@
                 </div>
             </div>
         </nav>
+        <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file" required>
+            <button type="submit">Import</button>
+        </form>
 
         <label for="filterDesa">Filter by Desa:</label>
         {{-- <select id="filterDesa" class="form-select mb-3">
