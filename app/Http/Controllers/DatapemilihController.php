@@ -124,10 +124,10 @@ class DatapemilihController extends Controller
     {
         // dd($pivotData);
         $data['kecamatan'] = $kecamatan;
-        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
             ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
             ->where('kecamatan', $kecamatan)
-            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
             ->get();
         // dd($data['pemilih']);
         return view('pemilih.kecamatan', $data);

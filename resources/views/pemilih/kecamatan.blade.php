@@ -111,25 +111,40 @@
                     $desas = '';
                     $korcams = '';
                     $no = 1;
-                    $totalall = 0;
+                    $total = 0;
+                    $kosong = 0;
+                    $totalall = [];
 
                 @endphp
                 <h2>Data Kecamatan : {{ $kecamatan }}</h2>
                 <div id="filter">
                     <h6>Filter Pendamping:</h6>
-                    @foreach ($pemilih as $result)
-                        @if ($pendampings != $result->pendamping)
-                            @php $pendampings = $result->pendamping; @endphp
+                    @foreach ($pemilih as $key => $result2)
+                        @php
+
+                            if ($desas != $result2->desa || $desas == '') {
+                                $desas = $result2->desa;
+                                $total = 0;
+                            }
+                            $total += count(json_decode($result2->kpm_array));
+                            if ($desas == $result2->desa && $desas != '') {
+                                $totalall[$desas] = $total;
+                            }
+                        @endphp
+
+                        @if ($pendampings != $result2->pendamping)
+                            @php $pendampings = $result2->pendamping; @endphp
                             <label>
-                                <input type="checkbox" class="kecamatan-filter" value="{{ $result->pendamping }}"
+                                <input type="checkbox" class="kecamatan-filter" value="{{ $result2->pendamping }}"
                                     checked>
-                                {{ $result->pendamping }}
+                                {{ $result2->pendamping }}
                             </label>
                         @endif
                     @endforeach
+                    {{-- @dd($totalall); --}}
                 </div>
 
-                @foreach ($pemilih as $result)
+                @foreach ($pemilih as $key => $result)
                     <div class="kecamatan-{{ str_replace([' ', '.'], ['-', ''], $result->pendamping) }}">
 
 
@@ -157,6 +172,11 @@
                                 Desa :
 
                                 {{ $result->desa }}
+                                <h6 style="margin-bottom: 10px;margin-top: 10px;">
+                                    Total Per Desa :
+
+                                    {{ $totalall[$desas] }}
+                                </h6>
                             </h6>
                         @endif
 
@@ -164,7 +184,6 @@
                             @php $tpss = $result->tps; @endphp
                             <h6 style="margin-bottom: 10px;margin-top: 10px;">
                                 TPS :
-
                                 {{ $result->tps }}
                             </h6>
                         @endif
@@ -175,14 +194,12 @@
                                         {{ $kpm }}
                                     </li>
                                 @endforeach
-                                @php
-                                    $totalall += count(json_decode($result->kpm_array));
-                                @endphp
 
                             </ul>
                         </div>
-                        <p class="list-group-item d-flex justify-content-between align-items-center"> Total :
-                            {{ $totalall }}</p>
+                        <p class="list-group-item d-flex justify-content-between align-items-center">
+                            Total per TPS : {{ count(json_decode($result->kpm_array)) }}
+                        </p>
 
                     </div>
                 @endforeach
