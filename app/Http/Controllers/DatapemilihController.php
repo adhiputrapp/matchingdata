@@ -147,9 +147,9 @@ class DatapemilihController extends Controller
         ini_set('max_execution_time', 300);
         $file = $request->file('file');
 
-        // Excel::import(new DataImport, $file);
+        Excel::import(new DataImport, $file);
 
-        Excel::import(new PemilihUpdateImport, $file);
+        // Excel::import(new PemilihUpdateImport, $file);
 
         return redirect()->route('pemilih')->with('success', 'Data berhasil diimpor');
     }
