@@ -85,59 +85,72 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label for="file" class="form-label">Choose Excel File</label>
-                    <input type="file" class="form-control" id="file" name="file" accept=".xlsx, .xls"
-                        required>
-                </div>
-                <button type="submit" class="btn btn-primary">Import</button>
-            </form>
+        <label for="filterDesa">Filter by Desa:</label>
+        {{-- <select id="filterDesa" class="form-select mb-3">
+            <option value="">All</option>
+            @foreach ($desaValues as $desa)
+                <option value="{{ $desa }}">{{ $desa }}</option>
+            @endforeach
+        </select> --}}
+        @php
+            $korkabs = '';
+            $korkabscount = 1;
+            $kecamatans = '';
+            $korcams = '';
+            $no = 1;
 
-            <!-- Filter by Desa -->
-            <label for="filterDesa">Filter by Desa:</label>
-            <select id="filterDesa" class="form-select mb-3">
-                <option value="">All</option>
-                @foreach ($desaValues as $desa)
-                    <option value="{{ $desa }}">{{ $desa }}</option>
-                @endforeach
-            </select>
+        @endphp
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Korkab</th>
+                        <th>Kecamatan</th>
+                        <th>Korcam</th>
+                        <th>Pendamping</th>
+                        <th>Desa</th>
+                        <th>KPM</th>
 
-            <div class="container-fluid">
-                <h2>Data Table</h2>
-                <table class="table">
-                    <thead>
+                        <th>TPS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($results as $result)
                         <tr>
-                            <th scope="col">PENDAMPING</th>
-                            <!-- Loop through unique DESA values to create th elements -->
-                            @foreach ($desaValues as $desa)
-                                <th scope="col">{{ $desa }}</th>
-                            @endforeach
+                            <td colspan="7" style="background: yellow;">{{ $result->korkab }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Loop through the pivotData to create rows -->
-                        @foreach ($pivotData as $row)
-                            <tr>
-                                <td>{{ $row->pendamping }}</td>
-                                <!-- Loop through the values to create td elements -->
-                                @foreach ($desaValues as $desa)
-                                    <td>{{ $row[$desa] }}</td>
-                                @endforeach
-                            </tr>
+                        @foreach (json_decode($result->result, true) as $data)
+                            @foreach ($data['desa_kpm'] as $index => $desa)
+                                <tr>
+                                    @if ($index === 0)
+                                        <td rowspan="{{ count($data['desa_kpm']) }}"></td>
+                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['Kecamatan'] }}</td>
+                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['korcam'] }}</td>
+                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['pendamping'] }}</td>
+                                    @endif
+                                    <td>{{ $desa['desa'] }}</td>
+                                    <td>{{ count($desa['kpm']) }}</td>
+                                    <td>{{ $desa['tps'] }}</td>
+                                </tr>
+                                @php
+                                    // Lakukan inisialisasi hanya pada indeks pertama setiap desa
+                                    if ($index === 0) {
+                                        $no++;
+                                    }
+                                @endphp
+                            @endforeach
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
 
 
-            <div id="result" class="mt-3">
-                <!-- Display result of filter -->
-            </div>
-            {{-- 
+        {{-- <div id="result" class="mt-3">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div> --}}
+        {{-- 
             <div class="container mt-5">
                 <h2>Data Table</h2>
                 <table class="table">
@@ -192,25 +205,65 @@
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom Script for Filter and Limit -->
+
+
     <script>
-        $(document).ready(function() {
-            // Event handler for filter
-            $('#filterDesa').change(function() {
-                var selectedDesa = $(this).val();
-
-                // Show/hide rows based on selected desa
-                $('tbody tr').each(function() {
-                    var rowData = $(this).find('td'); // Ambil semua kolom data pada baris
-                    var desaValue = rowData.eq(1).text(); // Ambil nilai pada kolom 'DESA'
-
-                    // Bandingkan nilai 'DESA' dengan opsi yang dipilih
-                    if (selectedDesa === '' || desaValue === selectedDesa) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var data = {
+                labels: ['KERTASARI', 'TEGALREJA', 'CIGADUNG', 'CIAWI', 'PENANGGAPAN', 'BLANDONGAN', 'CIPAJANG',
+                    'CIMUNDING', 'MALAHAYU', 'KARANGMAJA', 'DUKUHJERUK', 'BANDUNGSARI', 'CIBUNIWANGI',
+                    'SINDANGHEULA', 'BANJARHARJO', 'LONGKRANG DUKUH', 'CIBENDUNG', 'PENDE', 'TIWULANDU',
+                    'CIKUYA', 'PAREREAJA', 'BANJARLOR', 'KUBANGJERO', 'SUKAREJA', 'PADASUGIH',
+                    'RANDUSANGA KULON', 'KALIGANGSA WETAN', 'LEMBARAWA', 'TERLANGU', 'PULOSARI',
+                    'Randusanga Wetan', 'PASARBATANG', 'PEMARON', 'KEDUNGUTER', 'PAGEJUGAN', 'WANGANDALEM',
+                    'KALIWLINGI', 'BREBES', 'KALIGANGSA KULON', 'KRASAK', 'BANJARANYAR', 'GANDASULI',
+                    'PASAR BATANG', 'KARANGBALE', 'LUWUNGGEDE', 'SLATRI', 'SITANGGAL'
+                ],
+                datasets: [{
+                        label: 'AGUS SALEH',
+                        data: [0, 0, 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ],
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'ARIF SURATMAN',
+                        data: [0, 0, 0, 0, 0, 60, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ],
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'AULIA ARIEF LUTPHI',
+                        data: [0, 0, 0, 0, 0, 0, 0, 33, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        ],
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
                     }
-                });
+                    // Tambahkan dataset lain sesuai kebutuhan
+                ]
+            };
+            var options = {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            };
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: options
             });
         });
     </script>
