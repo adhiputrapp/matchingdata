@@ -5,8 +5,9 @@ namespace App\Imports;
 use App\Models\Pemilih;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class DataImport implements ToModel, WithHeadingRow
+class DataImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     /**
      * @param array $row
@@ -15,6 +16,11 @@ class DataImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
+
+        if (empty(array_filter($row))) {
+            return null; // Mengabaikan baris yang kosong
+        }
+
         $row = array_change_key_case($row, CASE_UPPER);
         // dd($row);
         return new Pemilih([
@@ -32,5 +38,10 @@ class DataImport implements ToModel, WithHeadingRow
             'rw' => $row['RW'],
             'tps' => $row['TPS'],
         ]);
+    }
+
+    public function chunkSize(): int
+    {
+        return 250; // Jumlah baris per chunk
     }
 }
