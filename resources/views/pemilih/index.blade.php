@@ -1,4 +1,4 @@
-<!doctype html>
+{{-- <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -26,9 +26,12 @@
 
 </head>
 
-<body>
+<body> --}}
+<x-layouts.main-layout>
+
+
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -83,7 +86,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> --}}
         <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="file" name="file" required>
@@ -209,6 +212,8 @@
 
         </main>
     </div>
+    @push('script')
+        
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom Script for Filter and Limit -->
@@ -271,7 +276,9 @@
                 options: options
             });
         });
-    </script>
-</body>
+        </script>
+    @endpush
+</x-layouts.main-layout>
+{{-- </body>
 
-</html>
+</html> --}}
