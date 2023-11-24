@@ -31,5 +31,13 @@ Route::middleware('Role:admin')->group(
                 Route::get('/filter/kecamatan/{kecamatan}', [App\Http\Controllers\DatapemilihController::class, 'kecamatan'])->name('filter.kecamatan');
             }
         );
+        Route::prefix('matching')->group(
+            function () {
+                Route::get('/', [App\Http\Controllers\DatadptController::class, 'index'])->name('matching');
+                Route::post('/import', [App\Http\Controllers\DatadptController::class, 'import'])->name('matching.import');
+                Route::get('/filter', [App\Http\Controllers\DatadptController::class, 'filter'])->name('matching.filter');
+                Route::get('/filter/kecamatan/{kecamatan}', [App\Http\Controllers\DatadptController::class, 'kecamatan'])->name('matching.filter.kecamatan');
+            }
+        );
     }
 );
