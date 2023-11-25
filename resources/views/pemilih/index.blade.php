@@ -73,6 +73,15 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('filter') }}"
+                                        ">
+                                        {{ __('Filter') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('matching') }}"
+                                        ">
+                                        {{ __('Matching') }}
+                                    </a>
+
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -90,7 +99,19 @@
             <button type="submit">Import</button>
         </form>
 
-        <label for="filterDesa">Filter by Desa:</label>
+        @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
         {{-- <select id="filterDesa" class="form-select mb-3">
             <option value="">All</option>
             @foreach ($desaValues as $desa)

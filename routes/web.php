@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-
+ 
 Auth::routes();
 Route::middleware('Role:admin')->group(
     function () {
@@ -34,7 +34,7 @@ Route::middleware('Role:admin')->group(
         Route::prefix('matching')->group(
             function () {
                 Route::get('/', [App\Http\Controllers\DatadptController::class, 'index'])->name('matching');
-                Route::post('/import', [App\Http\Controllers\DatadptController::class, 'import'])->name('matching.import');
+                Route::post('/import/{id}', [App\Http\Controllers\DatadptController::class, 'import'])->name('matching.import');
                 Route::get('/filter', [App\Http\Controllers\DatadptController::class, 'filter'])->name('matching.filter');
                 Route::get('/filter/kecamatan/{kecamatan}', [App\Http\Controllers\DatadptController::class, 'kecamatan'])->name('matching.filter.kecamatan');
             }

@@ -3,13 +3,11 @@
 namespace App\Imports;
 
 use App\Models\Datadpt;
-use App\Models\Pemilih;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PemilihUpdateImport implements ToCollection, WithHeadingRow
+class dptsecond implements ToCollection, WithHeadingRow
 {
     /**
      * @param Collection $collection
@@ -17,26 +15,33 @@ class PemilihUpdateImport implements ToCollection, WithHeadingRow
     public $globalVariable = 0;
     public function collection(Collection $rows)
     {
+     
         // dd($rows);
         foreach ($rows as $row) {
-            // if ($row->has('ket')) {
+            if (!isset($row['jalandukuh']) || !isset($row[1]) || !isset($row['rt']) || !isset($row['rw'])) {
+                // Jika satu atau beberapa kolom tidak ada, skip baris ini
+                continue;
+            }
+            
+            if ($row->has('11')) {
                 // Jika indeks '11' ada, periksa apakah nilai tidak null
-                if ($row['ket']) {
-                    $this->globalVariable = $row['ket'];
+                if (!is_null($row[11])) {
+                    $this->globalVariable++;
                 }
-            // }
+            }
             $dpt = new Datadpt();
-            $dpt->desa = $row['desakelurahan'];
-            $dpt->kpm = $row['nama'];
+            $dpt->desa = $row['jalandukuh'];
+            $dpt->kpm = $row[1];
             $dpt->rt = $row['rt'];
             $dpt->rw = $row['rw'];
             $dpt->tps = $this->globalVariable;
             $dpt->save();
         }
     }
-    //  public function headingRow(): int
-    // {
-    //     return 2;
-    // }
 
+    public function headingRow(): int
+    {
+        return 2;
+    }
 }
+

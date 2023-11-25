@@ -86,7 +86,7 @@ class DatapemilihController extends Controller
         $data['korkab'] = $korkab;
         $data['pemilih'] =
             Pemilih::select('korkab')
-            ->selectRaw("
+                ->selectRaw("
         JSON_ARRAYAGG(
             JSON_OBJECT(
                 'Kecamatan', kecamatan,
@@ -96,9 +96,9 @@ class DatapemilihController extends Controller
             )
         ) AS result
     ")
-            ->fromSub(function ($query) {
-                $query->select('korkab', 'kecamatan', 'korcam', 'pendamping')
-                    ->selectRaw("
+                ->fromSub(function ($query) {
+                    $query->select('korkab', 'kecamatan', 'korcam', 'pendamping')
+                        ->selectRaw("
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'kpm', kpm_array,
@@ -106,18 +106,18 @@ class DatapemilihController extends Controller
                     )
                 ) AS desa_kpm
             ")
-                    ->fromSub(function ($subquery) {
-                        $subquery->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
-                            ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
-                            ->from('pemilih')
-                            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa');
-                    }, 'desa_kpm_subquery')
-                    ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping');
-            }, 'korcam_subquery')
-            ->where('korkab', $korkab)
-            ->groupBy('korkab')
-            ->orderBy('korkab')
-            ->get();
+                        ->fromSub(function ($subquery) {
+                            $subquery->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
+                                ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+                                ->from('pemilih')
+                                ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa');
+                        }, 'desa_kpm_subquery')
+                        ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping');
+                }, 'korcam_subquery')
+                ->where('korkab', $korkab)
+                ->groupBy('korkab')
+                ->orderBy('korkab')
+                ->get();
         // dd($data['pemilih']);
         return view('pemilih.korkab', $data);
     }
@@ -146,11 +146,15 @@ class DatapemilihController extends Controller
     {
         ini_set('max_execution_time', 300);
         $file = $request->file('file');
+        try {
+            Excel::import(new DataImport, $file);
 
-        Excel::import(new DataImport, $file);
+            // Excel::import(new PemilihUpdateImport, $file);
 
-        // Excel::import(new PemilihUpdateImport, $file);
-
-        return redirect()->route('pemilih')->with('success', 'Data berhasil diimpor');
+            return redirect()->route('pemilih')->with('success', 'Data berhasil diimpor');
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan, tambahkan pesan error
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

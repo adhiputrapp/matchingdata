@@ -66,6 +66,13 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('filter') }}" ">
+                                            {{ __('Filter') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('matching') }}"
+                                            ">
+                                        {{ __('Matching') }}
+                                    </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -93,12 +100,23 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <form action="{{ route('matching.import') }}" method="post" enctype="multipart/form-data">
+                <img src="{{ asset('img/1.png') }}" alt="Form Guidance Image" class="form-guidance-image">
+
+                <form action="{{ route('matching.import', 1) }}" method="post" enctype="multipart/form-data" style="margin-top: 20px">
                     @csrf
+                    <label for="file"> Format Excel 1</label>
                     <input type="file" name="file" required>
                     <button type="submit">Import</button>
                 </form>
-                <a href="{{ route('matching.filter') }}" class="btn btn-primary">Start Matching Data</a>
+                <img src="{{ asset('img/2.png') }}" alt="Form Guidance Image" class="form-guidance-image" style="margin-top: 20px">
+
+                <form action="{{ route('matching.import', 2) }}" method="post" enctype="multipart/form-data" style="margin-top: 20px">
+                    @csrf
+                    <label for="file"> Format Excel 2</label>
+                    <input type="file" name="file" required>
+                    <button type="submit">Import</button>
+                </form>
+                <a href="{{ route('matching.filter') }}" class="btn btn-primary" style="margin-top: 20px">Start Matching Data</a>
             </div>
         </div>
     </div>
