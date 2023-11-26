@@ -13,18 +13,15 @@ class Pemilih extends Model
 
     protected $fillable = [
         'korkab',
-        'no_hp_korkab',
         'kecamatan',
         'korcam',
-        'no_hp_korcam',
         'pendamping',
-        'no_hp_pendamping',
         'desa',
         'kpm',
-        'no_hp_kpm',
         'rt',
         'rw',
         'tps',
+        'sumber',
     ];
 
     // public static function getPivotData()

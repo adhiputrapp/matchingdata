@@ -76,17 +76,29 @@ class DatapemilihController extends Controller
     public function filter()
     {
         // dd($pivotData);
-        $data['pemilih'] = Pemilih::groupBy('korkab')->get();
+        $data['pemilih'] = Pemilih::groupBy('sumber')->get();
 
         return view('pemilih.filter', $data);
     }
-    public function korkab($korkab)
+
+    public function sumber($sumber)
+    {
+        // dd($pivotData);
+        $data['sumber'] = $sumber;
+        $data['pemilih'] = Pemilih::where('sumber', $sumber)
+            ->groupby('sumber')
+            ->groupby('korkab')
+            ->get();
+
+        // dd($data['pemilih']);
+        return view('pemilih.sumber', $data);
+    }
+    public function korkab($sumber, $korkab)
     {
         // dd($pivotData);
         $data['korkab'] = $korkab;
-        $data['pemilih'] =
-            Pemilih::select('korkab')
-                ->selectRaw("
+        $data['pemilih'] = Pemilih::select('korkab', 'sumber')
+            ->selectRaw("
         JSON_ARRAYAGG(
             JSON_OBJECT(
                 'Kecamatan', kecamatan,
@@ -96,9 +108,9 @@ class DatapemilihController extends Controller
             )
         ) AS result
     ")
-                ->fromSub(function ($query) {
-                    $query->select('korkab', 'kecamatan', 'korcam', 'pendamping')
-                        ->selectRaw("
+            ->fromSub(function ($query) {
+                $query->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'sumber')
+                    ->selectRaw("
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'kpm', kpm_array,
@@ -106,27 +118,29 @@ class DatapemilihController extends Controller
                     )
                 ) AS desa_kpm
             ")
-                        ->fromSub(function ($subquery) {
-                            $subquery->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa')
-                                ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
-                                ->from('pemilih')
-                                ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa');
-                        }, 'desa_kpm_subquery')
-                        ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping');
-                }, 'korcam_subquery')
-                ->where('korkab', $korkab)
-                ->groupBy('korkab')
-                ->orderBy('korkab')
-                ->get();
+                    ->fromSub(function ($subquery) {
+                        $subquery->select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'sumber')
+                            ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+                            ->from('pemilih')
+                            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa');
+                    }, 'desa_kpm_subquery')
+                    ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping');
+            }, 'korcam_subquery')
+            ->where('sumber', $sumber)
+            ->where('korkab', $korkab)
+            ->groupBy('korkab')
+            ->orderBy('korkab')
+            ->get();
         // dd($data['pemilih']);
         return view('pemilih.korkab', $data);
     }
-    public function kecamatan($kecamatan)
+    public function kecamatan($sumber, $kecamatan)
     {
         // dd($pivotData);
         $data['kecamatan'] = $kecamatan;
-        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
+        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps', 'sumber')
             ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+            ->where('sumber', $sumber)
             ->where('kecamatan', $kecamatan)
             ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
             ->get();
@@ -146,8 +160,9 @@ class DatapemilihController extends Controller
     {
         ini_set('max_execution_time', 300);
         $file = $request->file('file');
+        $sumber = $request->sumber;
         try {
-            Excel::import(new DataImport, $file);
+            Excel::import(new DataImport($sumber), $file);
 
             // Excel::import(new PemilihUpdateImport, $file);
 
