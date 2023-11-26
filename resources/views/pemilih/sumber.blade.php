@@ -96,7 +96,7 @@
 
         <main>
             <div class="container mt-4">
-                <h2>Sumber</h2>
+                <h2>Kordinator Kabupaten</h2>
 
                 <div class="card-deck">
 
@@ -104,9 +104,9 @@
                     @foreach ($pemilih as $data)
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $data->sumber }}</h5>
+                                <h5 class="card-title">{{ $data->korkab }}</h5>
                                 <p class="card-text">
-                                    <a href="{{ route('filter.sumber', [$data->sumber]) }}">
+                                    <a href="{{ route('filter.sumber', $data->korkab) }}">
                                         Detail
                                     </a>
                                 </p>

@@ -27,8 +27,9 @@ Route::middleware('Role:admin')->group(
                 Route::get('/', [App\Http\Controllers\DatapemilihController::class, 'index'])->name('pemilih');
                 Route::post('/import', [App\Http\Controllers\DatapemilihController::class, 'import'])->name('import');
                 Route::get('/filter', [App\Http\Controllers\DatapemilihController::class, 'filter'])->name('filter');
-                Route::get('/filter/korkab/{korkab}', [App\Http\Controllers\DatapemilihController::class, 'korkab'])->name('filter.korkab');
-                Route::get('/filter/kecamatan/{kecamatan}', [App\Http\Controllers\DatapemilihController::class, 'kecamatan'])->name('filter.kecamatan');
+                Route::get('/filter/sumber/{sumber}', [App\Http\Controllers\DatapemilihController::class, 'sumber'])->name('filter.sumber');
+                Route::get('/filter/korkab/{sumber}/{korkab}', [App\Http\Controllers\DatapemilihController::class, 'korkab'])->name('filter.korkab');
+                Route::get('/filter/kecamatan/{sumber}/{kecamatan}', [App\Http\Controllers\DatapemilihController::class, 'kecamatan'])->name('filter.kecamatan');
             }
         );
         Route::prefix('matching')->group(

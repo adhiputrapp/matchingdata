@@ -25,6 +25,7 @@ class Pemilih extends Model
         'rt',
         'rw',
         'tps',
+        'sumber',
     ];
 
     // public static function getPivotData()

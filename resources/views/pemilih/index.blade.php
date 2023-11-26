@@ -95,8 +95,9 @@
         </nav>
         <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
             @csrf
-            <input type="file" name="file" required>
-            <button type="submit">Import</button>
+            <input type="file" name="file" required><br>
+            <input type="text" name="sumber" placeholder="Sumber" required><br>
+            <button type="submit">Import</button><br>
         </form>
 
         @if (session('success'))

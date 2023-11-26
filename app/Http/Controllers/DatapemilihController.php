@@ -76,9 +76,18 @@ class DatapemilihController extends Controller
     public function filter()
     {
         // dd($pivotData);
-        $data['pemilih'] = Pemilih::groupBy('korkab')->get();
+        $data['pemilih'] = Pemilih::groupBy('sumber')->get();
 
         return view('pemilih.filter', $data);
+    }
+    public function sumber($sumber)
+    {
+        // dd($pivotData);
+        $data['pemilih'] = Pemilih::groupBy('korkab')
+            ->where('sumber', $sumber)
+            ->get();
+
+        return view('pemilih.sumber', $data);
     }
     public function korkab($korkab)
     {
@@ -146,8 +155,10 @@ class DatapemilihController extends Controller
     {
         ini_set('max_execution_time', 300);
         $file = $request->file('file');
+        $sumber = $request->sumber;
+        // dd($sumber);
         try {
-            Excel::import(new DataImport, $file);
+            Excel::import(new DataImport($sumber), $file);
 
             // Excel::import(new PemilihUpdateImport, $file);
 
