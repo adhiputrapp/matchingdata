@@ -1,103 +1,24 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.main')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    <!-- Tautan Bootstrap 5 CSS CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-
-    <!-- Tautan Bootstrap 5 JavaScript dan Popper.js CDN, diarahkan ke akhir dokumen sebelum tag </body> -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-</head>
-
-<body>
+@section('content')
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->role }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('filter') }}"
-                                        ">
-                                        {{ __('Filter') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('matching') }}"
-                                        ">
-                                        {{ __('Matching') }}
-                                    </a>
-
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+       
         <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
             @csrf
-            <input type="file" name="file" required><br>
+            <input 
+            class="relative mb-2 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+            type="file" name="file" required><br>
             <input type="text" name="sumber" placeholder="Sumber" required><br>
-            <button type="submit">Import</button><br>
+            <button
+            class="mb-3 inline-block w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
+            type="button"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            style="
+              background: linear-gradient(to bottom left, #000000, #d8363a);
+            ">
+            Import
+        </button><br>
         </form>
 
         @if (session('success'))
@@ -128,36 +49,36 @@
 
         @endphp
         <div class="container-fluid">
-            <table class="table table-bordered">
-                <thead>
+            <table class="min-w-full border-black border-2 text-left text-sm font-light">
+                <thead class=" font-medium dark:border-neutral-500">
                     <tr>
-                        <th>Korkab</th>
-                        <th>Kecamatan</th>
-                        <th>Korcam</th>
-                        <th>Pendamping</th>
-                        <th>Desa</th>
-                        <th>KPM</th>
+                        
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">Kecamatan</th>
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">Korcam</th>
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">Pendamping</th>
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">Desa</th>
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">KPM</th>
 
-                        <th>TPS</th>
+                        <th scope="col" class="px-6 py-4 text-lg font-bold border-black border-2">TPS</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($results as $result)
                         <tr>
-                            <td colspan="7" style="background: yellow;">{{ $result->korkab }}</td>
+                            <td class="px-6 py-4 border-black border-2 text-2xl font-bold items-center" colspan="7" style="background: yellow;">Korkab : {{ $result->korkab }}</td>
                         </tr>
                         @foreach (json_decode($result->result, true) as $data)
                             @foreach ($data['desa_kpm'] as $index => $desa)
                                 <tr>
                                     @if ($index === 0)
-                                        <td rowspan="{{ count($data['desa_kpm']) }}"></td>
-                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['Kecamatan'] }}</td>
-                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['korcam'] }}</td>
-                                        <td rowspan="{{ count($data['desa_kpm']) }}">{{ $data['pendamping'] }}</td>
+                                        {{-- <td class="px-6 py-4 border-b border"rowspan="{{ count($data['desa_kpm']) }}"></td> --}}
+                                        <td class="px-6 py-4  text-md font-bold border-black border-2"rowspan="{{ count($data['desa_kpm']) }}">{{ $data['Kecamatan'] }}</td>
+                                        <td class="px-6 py-4  text-md font-bold border-black border-2"rowspan="{{ count($data['desa_kpm']) }}">{{ $data['korcam'] }}</td>
+                                        <td class="px-6 py-4  text-md font-bold border-black border-2"rowspan="{{ count($data['desa_kpm']) }}">{{ $data['pendamping'] }}</td>
                                     @endif
-                                    <td>{{ $desa['desa'] }}</td>
-                                    <td>{{ count($desa['kpm']) }}</td>
-                                    <td>{{ $desa['tps'] }}</td>
+                                    <td class="px-6 py-4  text-md font-bold border-black border-2">{{ $desa['desa'] }}</td>
+                                    <td class="px-6 py-4  text-md font-bold border-black border-2">{{ count($desa['kpm']) }}</td>
+                                    <td class="px-6 py-4  text-md font-bold border-black border-2">{{ $desa['tps'] }}</td>
                                 </tr>
                                 @php
                                     // Lakukan inisialisasi hanya pada indeks pertama setiap desa
@@ -294,6 +215,4 @@
             });
         });
     </script>
-</body>
-
-</html>
+@endsection

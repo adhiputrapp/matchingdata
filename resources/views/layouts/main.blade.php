@@ -21,6 +21,7 @@
     <!-- Tautan Bootstrap 5 JavaScript dan Popper.js CDN, diarahkan ke akhir dokumen sebelum tag </body> -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
@@ -28,11 +29,26 @@
 </head>
 
 <body>
-    <div id="app" class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-r from-red-600 to-gray-900 dark:from-gray-900 dark:to-black p-10">
+    <div class="max-w-full max-h-screen overflow-auto">
+        
+        <div class="min-h-screen bg-gray-100">
+            <!-- Main navigation container -->
+        @include('layouts.navbar')
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+            {{-- <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif --}}
+
+            <!-- Page Content -->
+            <main class="ml-12 mr-12 mt-5">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 
