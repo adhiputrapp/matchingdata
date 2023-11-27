@@ -71,12 +71,11 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('filter') }}"
-                                        ">
-                                        {{ __('Filter') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('matching') }}"
-                                        ">
+                                    <a class="dropdown-item" href="{{ route('filter') }}" ">
+                                                                        {{ __('Filter') }}
+                                                                    </a>
+                                                                    <a class="dropdown-item" href="{{ route('matching') }}"
+                                                                        ">
                                         {{ __('Matching') }}
                                     </a>
 
@@ -199,44 +198,45 @@
                             </h6>
                         @endif
                         @foreach ($sama as $kunci => $hasil)
-                        @if ($hasil->tps == $result->tps)
-                        @if ($hasil->desa == $result->desa)
-                        <h6>Data yang Sama</h6>
-                        <div class="scrollable-list" style="max-height: 300px; overflow-y: auto;">
-                            <ul class="list-group w-100">
-                                @foreach (json_decode($result->kpm_array) as $index => $kpm)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ $kpm }}
-                                    </li>
-                                @endforeach
+                            @if ($hasil->tps == $result->tps)
+                                @if ($hasil->desa == $result->desa)
+                                    <h6>Data yang Sama</h6>
+                                    <div class="scrollable-list" style="max-height: 300px; overflow-y: auto;">
+                                        <ul class="list-group w-100">
+                                            @foreach (json_decode($result->kpm_array) as $index => $kpm)
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $kpm }}
+                                                </li>
+                                            @endforeach
 
-                            </ul>
-                        </div>
-                        <p class="list-group-item d-flex justify-content-between align-items-center">
-                            Total per TPS : {{ count(json_decode($result->kpm_array)) }}
-                        </p>
-                        @endif
-                        @endif
-                    @endforeach
+                                        </ul>
+                                    </div>
+                                    <p class="list-group-item d-flex justify-content-between align-items-center">
+                                        Total per TPS : {{ count(json_decode($result->kpm_array)) }}
+                                    </p>
+                                @endif
+                            @endif
+                        @endforeach
 
                         @foreach ($tidaksama as $keys => $results)
                             @if ($results->tps == $result->tps)
-                            @if ($results->desa == $result->desa)
-                            <h6>Data yang Berbeda</h6>
-                                <div class="scrollable-list" style="max-height: 300px; overflow-y: auto;">
-                                    <ul class="list-group w-100">
-                                        @foreach (json_decode($results->kpm_array) as $indexs => $kpms)
-                                            <li
-                                                class="list-group-item d-flex justify-content-between align-items-center">
-                                                {{ $kpms}}
-                                            </li>
-                                        @endforeach
+                                @if ($results->desa == $result->desa)
+                                    <h6>Data yang Berbeda</h6>
+                                    <div class="scrollable-list" style="max-height: 300px; overflow-y: auto;">
+                                        <ul class="list-group w-100">
+                                            @foreach (json_decode($results->kpm_array) as $indexs => $kpms)
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $kpms }}
+                                                </li>
+                                            @endforeach
 
-                                    </ul>
-                                </div>
-                                <p class="list-group-item d-flex justify-content-between align-items-center">
-                                    Total per TPS : {{ count(json_decode($results->kpm_array)) }}
-                                </p>
+                                        </ul>
+                                    </div>
+                                    <p class="list-group-item d-flex justify-content-between align-items-center">
+                                        Total per TPS : {{ count(json_decode($results->kpm_array)) }}
+                                    </p>
                                 @endif
                             @endif
                         @endforeach

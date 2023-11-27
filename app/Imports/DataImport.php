@@ -10,9 +10,9 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 class DataImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     protected $sumber;
-    public function __construct($additionalText)
+    public function __construct($sumber)
     {
-        $this->additionalText = $additionalText;
+        $this->sumber = $sumber;
     }
     /**
      * @param array $row
@@ -34,11 +34,11 @@ class DataImport implements ToModel, WithChunkReading, WithHeadingRow
             'korcam' => $row['NAMA_KORCAM'],
             'pendamping' => $row['NAMA_PENDAMPING'],
             'desa' => $row['DESA'],
-            'kpm' => $row['NAMA_KPM'],
+            'kpm' => preg_replace('/\s+/', ' ', trim($row['NAMA_KPM'])),
             'rt' => $row['RT'],
             'rw' => $row['RW'],
             'tps' => $row['TPS'],
-            'sumber' => $this->additionalText,
+            'sumber' => $this->sumber,
         ]);
     }
 

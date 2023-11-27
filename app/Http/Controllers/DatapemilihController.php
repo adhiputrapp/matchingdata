@@ -138,17 +138,18 @@ class DatapemilihController extends Controller
     {
         // dd($pivotData);
         $data['kecamatan'] = $kecamatan;
-        $data['pemilih'] = Pemilih::select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps', 'sumber')
+        $data['pemilih'] = Pemilih::selectRaw('korkab, kecamatan, korcam, pendamping, desa, CAST(tps AS DECIMAL) AS tps, sumber')
             ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
             ->where('sumber', $sumber)
             ->where('kecamatan', $kecamatan)
-            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
-            ->orderBy('korkab','asc')
-            ->orderBy('kecamatan','asc')
-            ->orderBy('korcam','asc')
-            ->orderBy('pendamping','asc')
-            ->orderBy('desa','asc')
-            ->orderBy('tps','asc')
+            ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps', 'sumber')
+            ->orderBy('korkab', 'asc')
+            ->orderBy('kecamatan', 'asc')
+            ->orderBy('korcam', 'asc')
+            ->orderBy('pendamping', 'asc')
+            ->orderBy('desa', 'asc')
+            ->orderBy('tps', 'asc')
+            ->orderBy('kpm', 'asc')
             ->get();
         // dd($data['pemilih']);
         return view('pemilih.kecamatan', $data);

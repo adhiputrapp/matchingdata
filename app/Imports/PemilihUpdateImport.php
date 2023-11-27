@@ -23,7 +23,7 @@ class PemilihUpdateImport implements ToCollection, WithHeadingRow
                 // Jika satu atau beberapa kolom tidak ada, skip baris ini
                 continue;
             }
-            
+
             if ($row->has('ket')) {
                 // Jika indeks '11' ada, periksa apakah nilai tidak null
                 if ($row['ket']) {
