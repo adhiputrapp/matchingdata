@@ -21,7 +21,7 @@
                 
                 <div class="w-full mb-10 ">
                     <p class="font-bold text-lg"> Contoh Format 1 </p>
-                    <img src="{{ asset('img/1.png') }}" alt="Form Guidance Image" class="form-guidance-image flex flex-auto items-center justify-center">
+                    <img src="{{ asset('img/1.PNG') }}" alt="Form Guidance Image" class="form-guidance-image mx-auto">
                     <form action="{{ route('matching.import', 1) }}" method="post" enctype="multipart/form-data" style="margin-top: 20px">
                         @csrf
                         <label class="mb-4" for="file"> Format Excel 1</label>
@@ -36,7 +36,7 @@
                 
                 <div class="w-full mb-10">
                     <p class="font-bold text-lg"> Contoh Format 2 </p>
-                    <img src="{{ asset('img/2.png') }}" alt="Form Guidance Image" class="form-guidance-image" style="margin-top: 20px">
+                    <img src="{{ asset('img/2.PNG') }}" alt="Form Guidance Image" class="form-guidance-image mx-auto" style="margin-top: 20px">
                     <form action="{{ route('matching.import', 2) }}" method="post" enctype="multipart/form-data" style="margin-top: 20px">
                         @csrf
                         <label class="mb-4" for="file"> Format Excel 2</label>

@@ -198,6 +198,9 @@
                                 {{ $result->tps }}
                             </h6>
                         @endif
+                        @foreach ($sama as $kunci => $hasil)
+                        @if ($hasil->tps == $result->tps)
+                        @if ($hasil->desa == $result->desa)
                         <h6>Data yang Sama</h6>
                         <div class="scrollable-list" style="max-height: 300px; overflow-y: auto;">
                             <ul class="list-group w-100">
@@ -212,6 +215,10 @@
                         <p class="list-group-item d-flex justify-content-between align-items-center">
                             Total per TPS : {{ count(json_decode($result->kpm_array)) }}
                         </p>
+                        @endif
+                        @endif
+                    @endforeach
+
                         @foreach ($tidaksama as $keys => $results)
                             @if ($results->tps == $result->tps)
                             @if ($results->desa == $result->desa)

@@ -13,86 +13,46 @@ class DatadptController extends Controller
 {
     public function index()
     {
-        // $data['results'] = DB::table('pemilih')
-        //     ->select('korkab')
-        //     ->selectRaw("
-        //         JSON_ARRAYAGG(
-        //             JSON_OBJECT(
-        //                 'Kecamatan', kecamatan,
-        //                 'korcam', korcam,
-        //                 'pendamping', pendamping,
-        //                 'desa_kpm', desa_kpm
-        //             )
-        //         ) AS result
-        //     ")
-        //     ->from(DB::raw("
-        //         (SELECT 
-        //             korkab,
-        //             kecamatan, 
-        //             korcam, 
-        //             pendamping,
-        //             JSON_ARRAYAGG(
-        //                 JSON_OBJECT(
-        //                     'rt', rt,
-        //                     'rw', rw,
-        //                     'kpm', kpm_array,
-        //                     'tps', tps,
-        //                     'desa', desa
-        //                 )
-        //             ) AS desa_kpm
-        //         FROM (
-        //             SELECT 
-        //                 korkab,
-        //                 kecamatan, 
-        //                 korcam,
-        //                 pendamping,
-        //                 desa,
-        //                 MAX(rt) AS rt,  
-        //                 MAX(rw) AS rw,
-        //                 JSON_ARRAYAGG(kpm) AS kpm_array,
-        //                 MAX(tps) AS tps
-        //             FROM 
-        //                 pemilih 
-        //             GROUP BY 
-        //                 korkab, kecamatan, korcam, pendamping, desa
-        //         ) AS desa_kpm_subquery
-        //         GROUP BY 
-        //             korkab, kecamatan, korcam, pendamping
-        //     ) AS korcam_subquery"))
-        //     ->groupBy('korkab')
-        //     ->orderBy('korkab')
-        //     ->get();
-
-
-
-
-
-        // dd($pivotData);
-        // $data['pemilih'] = Pemilih::all();
         return view('matching.index');
     }
 
     public function filter()
     {
         // dd($pivotData);
-        $data['pemilih'] = Pemilih::groupBy('kecamatan')->get();
+        $data['pemilih'] = Pemilih::groupBy('sumber')->get();
 
         return view('matching.filter', $data);
     }
+    public function sumber($sumber)
+    {
+        // dd($pivotData);
+        $data['pemilih'] = Pemilih::groupBy('kecamatan')->get();
 
-    public function kecamatan($kecamatan)
+        return view('matching.sumber', $data);
+    }
+
+    public function kecamatan($sumber,$kecamatan)
     {
         // dd($pivotData);
         $data['kecamatan'] = $kecamatan;
-        $data['pemilih'] = Pemilih::join('dpt', function($join) {
+        $data['pemilih'] = Pemilih::
+        select('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps','sumber')
+        ->selectRaw('JSON_ARRAYAGG(kpm) AS kpm_array')
+        ->where('sumber', $sumber)
+        ->where('kecamatan', $kecamatan)
+        ->groupBy('desa','tps')
+        ->get();
+
+        $data['sama'] = Pemilih::join('dpt', function($join) {
             $join->on('dpt.desa', '=', 'pemilih.desa')
                 ->on('dpt.kpm', '=', 'pemilih.kpm')
                 ->on('dpt.rt', '=', 'pemilih.rt')
                 ->on('dpt.rw', '=', 'pemilih.rw')
                 ->on('dpt.tps', '=', 'pemilih.tps');
         })
-        ->select('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps')
+        ->select('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps','pemilih.sumber')
             ->selectRaw('JSON_ARRAYAGG(pemilih.kpm) AS kpm_array')
+            ->where('pemilih.sumber', $sumber)
             ->where('pemilih.kecamatan', $kecamatan)
             ->groupBy('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps')
             ->get();
@@ -104,9 +64,10 @@ class DatadptController extends Controller
                 ->on('dpt.rw', '=', 'pemilih.rw')
                 ->on('dpt.tps', '=', 'pemilih.tps');
         })
-        ->select('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps')
+        ->select('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps','pemilih.sumber')
         ->selectRaw('JSON_ARRAYAGG(pemilih.kpm) AS kpm_array')
         ->whereNull('dpt.desa')
+        ->where('pemilih.sumber', $sumber)
         ->where('pemilih.kecamatan', $kecamatan)
         ->groupBy('pemilih.korkab', 'pemilih.kecamatan', 'pemilih.korcam', 'pemilih.pendamping', 'pemilih.desa', 'pemilih.tps')
         ->get();

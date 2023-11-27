@@ -24,12 +24,12 @@ class PemilihUpdateImport implements ToCollection, WithHeadingRow
                 continue;
             }
             
-            // if ($row->has('ket')) {
+            if ($row->has('ket')) {
                 // Jika indeks '11' ada, periksa apakah nilai tidak null
                 if ($row['ket']) {
-                    $this->globalVariable == $row['ket'];
+                    $this->globalVariable++;
                 }
-            // }
+            }
             $dpt = new Datadpt();
             $dpt->desa = $row['desakelurahan'];
             $dpt->kpm = $row['nama'];

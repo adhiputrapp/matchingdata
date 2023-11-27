@@ -143,6 +143,12 @@ class DatapemilihController extends Controller
             ->where('sumber', $sumber)
             ->where('kecamatan', $kecamatan)
             ->groupBy('korkab', 'kecamatan', 'korcam', 'pendamping', 'desa', 'tps')
+            ->orderBy('korkab','asc')
+            ->orderBy('kecamatan','asc')
+            ->orderBy('korcam','asc')
+            ->orderBy('pendamping','asc')
+            ->orderBy('desa','asc')
+            ->orderBy('tps','asc')
             ->get();
         // dd($data['pemilih']);
         return view('pemilih.kecamatan', $data);
