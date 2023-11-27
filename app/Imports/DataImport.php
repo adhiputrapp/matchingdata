@@ -10,10 +10,9 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 class DataImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     protected $sumber;
-
-    public function __construct($sumber)
+    public function __construct($additionalText)
     {
-        $this->sumber = $sumber;
+        $this->additionalText = $additionalText;
     }
     /**
      * @param array $row
@@ -22,13 +21,10 @@ class DataImport implements ToModel, WithChunkReading, WithHeadingRow
      */
     public function model(array $row)
     {
-        // dd($this->sumber);
 
         if (empty(array_filter($row))) {
             return null; // Mengabaikan baris yang kosong
         }
-
-        
 
         $row = array_change_key_case($row, CASE_UPPER);
         // dd($row);
@@ -42,7 +38,7 @@ class DataImport implements ToModel, WithChunkReading, WithHeadingRow
             'rt' => $row['RT'],
             'rw' => $row['RW'],
             'tps' => $row['TPS'],
-            'sumber' => $this->sumber,
+            'sumber' => $this->additionalText,
         ]);
     }
 

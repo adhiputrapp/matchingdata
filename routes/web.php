@@ -37,7 +37,8 @@ Route::middleware('Role:admin')->group(
                 Route::get('/', [App\Http\Controllers\DatadptController::class, 'index'])->name('matching');
                 Route::post('/import/{id}', [App\Http\Controllers\DatadptController::class, 'import'])->name('matching.import');
                 Route::get('/filter', [App\Http\Controllers\DatadptController::class, 'filter'])->name('matching.filter');
-                Route::get('/filter/kecamatan/{kecamatan}', [App\Http\Controllers\DatadptController::class, 'kecamatan'])->name('matching.filter.kecamatan');
+                Route::get('/filter/sumber/{sumber}', [App\Http\Controllers\DatadptController::class, 'sumber'])->name('matching.filter.sumber');
+                Route::get('/filter/kecamatan/{sumber}/{kecamatan}', [App\Http\Controllers\DatadptController::class, 'kecamatan'])->name('matching.filter.kecamatan');
             }
         );
     }

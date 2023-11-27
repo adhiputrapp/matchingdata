@@ -23,9 +23,9 @@ class dptsecond implements ToCollection, WithHeadingRow
                 continue;
             }
             
-            if ($row->has('11')) {
+            if ($row->has('8')) {
                 // Jika indeks '11' ada, periksa apakah nilai tidak null
-                if (!is_null($row[11])) {
+                if (!is_null($row[8])) {
                     $this->globalVariable++;
                 }
             }
@@ -41,7 +41,7 @@ class dptsecond implements ToCollection, WithHeadingRow
 
     public function headingRow(): int
     {
-        return 2;
+        return 4;
     }
 }
 

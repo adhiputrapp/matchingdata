@@ -19,16 +19,17 @@ class PemilihUpdateImport implements ToCollection, WithHeadingRow
     {
         // dd($rows);
         foreach ($rows as $row) {
-            if (!isset($row['jalandukuh']) || !isset($row[1]) || !isset($row['rt']) || !isset($row['rw'])) {
+            if (!isset($row['desakelurahan']) || !isset($row['nama']) || !isset($row['rt']) || !isset($row['rw'])) {
                 // Jika satu atau beberapa kolom tidak ada, skip baris ini
                 continue;
             }
-            // if ($row->has('ket')) {
+            
+            if ($row->has('ket')) {
                 // Jika indeks '11' ada, periksa apakah nilai tidak null
                 if ($row['ket']) {
-                    $this->globalVariable = $row['ket'];
+                    $this->globalVariable++;
                 }
-            // }
+            }
             $dpt = new Datadpt();
             $dpt->desa = $row['desakelurahan'];
             $dpt->kpm = $row['nama'];
